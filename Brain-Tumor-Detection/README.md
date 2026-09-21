@@ -310,3 +310,361 @@ Create a **user-friendly web interface** enabling users to upload images and get
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
+# 🏗️ System Overview
+
+Our system is built as a **complete end-to-end pipeline** that takes an MRI image as input and produces a comprehensive diagnosis with medical recommendations. The system consists of **three main AI components** integrated into a single web platform.
+
+<br>
+
+<div align="center">
+
+<img src="Assets/system-architecture.jpg" alt="System Architecture Diagram" width="900"/>
+
+<sub><i>Figure 1: Overall System Architecture — Users, Frontend, Backend Services, AI Services, and Database</i></sub>
+
+</div>
+
+<br>
+
+<table>
+<tr>
+<td align="center" width="33%" valign="top">
+
+## 1️⃣
+
+### 🧠 Input
+
+**MRI Image**
+
+User uploads an MRI scan through the web interface.
+
+</td>
+<td align="center" width="33%" valign="top">
+
+## 2️⃣
+
+### ⚙️ Processing
+
+**AI Analysis**
+
+The image is preprocessed and passed through the AI models.
+
+</td>
+<td align="center" width="33%" valign="top">
+
+## 3️⃣
+
+### 📊 Output
+
+**Diagnosis + Report**
+
+User receives diagnosis, recommendations, and bilingual PDF report.
+
+</td>
+</tr>
+</table>
+
+<br>
+
+## 🔑 Core Components
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🔬 Classification Module
+
+Analyzes the MRI image and classifies it into one of **four categories**:
+
+- **Glioma** — Tumor in glial cells
+- **Meningioma** — Tumor in meninges
+- **Pituitary** — Tumor in pituitary gland
+- **No Tumor** — Healthy brain
+
+**Output:** Tumor type + Confidence score (%)
+
+</td>
+<td width="50%" valign="top">
+
+### 🎯 Segmentation Module
+
+Delineates the **exact boundaries** of the tumor region:
+
+- Produces a **binary mask** (tumor vs. background)
+- Overlays the mask on the original MRI
+- Provides **visual localization** of the tumor
+- Assists in surgical planning
+
+**Output:** Segmented tumor overlay
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 💬 Recommendation Engine
+
+Provides **personalized medical advice** based on:
+
+- Tumor type (Glioma / Meningioma / Pituitary)
+- Tumor size (Small / Medium / Large)
+- Calculated **risk level** (Low / Medium / High)
+
+**Output:** Tailored recommendations + Chatbot response
+
+</td>
+<td width="50%" valign="top">
+
+### 🖥️ Web Application
+
+A **full-stack platform** that integrates everything:
+
+- **Secure authentication** (JWT-based)
+- **Role-based access** (Patient / Doctor / Admin)
+- **Bilingual PDF reports** (Arabic & English)
+- **Diagnosis history** tracking
+- **Chatbot interface** for consultation
+
+**Output:** Complete user experience
+
+</td>
+</tr>
+</table>
+
+<br>
+
+## 🎯 System Capabilities
+
+| Capability | Description |
+|------------|-------------|
+| 🔍 **Detect** | Identify the presence or absence of a brain tumor |
+| 🏷️ **Classify** | Determine the specific tumor type (4 classes) |
+| 🎯 **Segment** | Draw precise boundaries around the tumor |
+| 📊 **Assess** | Calculate a risk level based on tumor characteristics |
+| 💬 **Recommend** | Provide personalized medical recommendations |
+| 📄 **Report** | Generate bilingual PDF reports |
+| 💾 **Store** | Save all diagnoses with full history tracking |
+| 👥 **Manage** | Role-based access for patients, doctors, and admins |
+
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
+
+# 🔄 System Workflow
+
+The system follows a **clear, step-by-step workflow** from image upload to diagnosis and reporting. Below is the complete flow:
+
+<br>
+
+## 📋 End-to-End Workflow
+
+<table>
+<tr>
+<td align="center" width="60">
+
+### 🔐
+
+**1**
+
+</td>
+<td>
+
+### Authentication
+
+The user logs into the system using **email and password**. The backend validates credentials and issues a **JWT token** valid for 30 minutes.
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 📤
+
+**2**
+
+</td>
+<td>
+
+### MRI Image Upload
+
+The user uploads an MRI image via **click-to-upload** or **drag-and-drop**. Supported formats: **JPG, PNG, JPEG**.
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### ✅
+
+**3**
+
+</td>
+<td>
+
+### Format Validation
+
+The system validates the file format. If invalid, an error message is displayed and the user is prompted to re-upload.
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### ⚙️
+
+**4**
+
+</td>
+<td>
+
+### Image Preprocessing
+
+The image is automatically preprocessed:
+- **Resized** to 224×224 pixels (for classification)
+- **Resized** to 128×128 pixels (for segmentation)
+- **Normalized** pixel values to [0, 1]
+- **RGB conversion** if needed
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 🤖
+
+**5**
+
+</td>
+<td>
+
+### AI Analysis
+
+Two AI models run **in parallel**:
+- **CNN Classifier** → Predicts tumor type + confidence score
+- **LSMAtt-Net Segmenter** → Generates tumor boundary mask
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 📊
+
+**6**
+
+</td>
+<td>
+
+### Result Interpretation
+
+The system interprets the AI outputs:
+- **Tumor Type**: Glioma / Meningioma / Pituitary / No Tumor
+- **Confidence Score**: Percentage of model certainty
+- **Risk Level**: Low / Medium / High (based on tumor type + size)
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 💾
+
+**7**
+
+</td>
+<td>
+
+### Database Storage
+
+The complete diagnosis is saved to the database:
+- Original MRI image path
+- Classification result + confidence
+- Segmentation mask path
+- Timestamp and user information
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 🖥️
+
+**8**
+
+</td>
+<td>
+
+### Result Display
+
+The user is shown:
+- **Tumor type** with color-coded card
+- **Confidence score** percentage
+- **Risk level** with appropriate badge
+- **Segmented MRI overlay**
+- **Medical recommendations** list
+- **Download PDF** buttons (Arabic & English)
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 💬
+
+**9**
+
+</td>
+<td>
+
+### Chatbot Interaction (Optional)
+
+The user can chat with the **medical chatbot** to ask questions about:
+- Tumor type characteristics
+- Treatment options
+- Lifestyle recommendations
+- Risk assessment
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 📄
+
+**10**
+
+</td>
+<td>
+
+### Report Generation
+
+The user can download a **bilingual PDF report** containing:
+- Tumor type & risk level
+- Original MRI image
+- Medical recommendations
+- Doctor's notes (if applicable)
+- Educational disclaimer
+
+</td>
+</tr>
+</table>
+
+<br>
+
+## 🔁 Data Flow Summary
+
+```text
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│   User   │───▶│ Frontend │───▶│ Backend  │───▶│   AI     │
+│ (Login)  │    │ (Upload) │    │ (Route)  │    │ (Models) │
+└──────────┘    └──────────┘    └──────────┘    └──────────┘
+                                       │                │
+                                       ▼                ▼
+                                 ┌──────────┐    ┌──────────┐
+                                 │ Database │◀───│  Result  │
+                                 │ (Save)   │    │ (Return) │
+                                 └──────────┘    └──────────┘
+                                       │
+                                       ▼
+                                 ┌──────────┐
+                                 │   User   │
+                                 │ (Report) │
+                                 └──────────┘
