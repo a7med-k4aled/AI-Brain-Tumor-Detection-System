@@ -669,13 +669,15 @@ The user can download a **bilingual PDF report** containing:
                                  │ (Report) │
                                  └──────────┘
 ```
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
+
 # 🤖 AI Components
 
 The system is powered by **three core AI modules** that work together to provide comprehensive brain tumor diagnosis and patient support. Each component is designed for a specific task, and together they form a complete diagnostic pipeline.
 
 <br>
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ## 🔬 Classification
 
@@ -736,7 +738,7 @@ The **Classification Module** is the primary diagnostic engine of the system. It
 
 <br>
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ## 🎯 Segmentation
 
@@ -802,7 +804,7 @@ The **Segmentation Module** precisely delineates tumor boundaries, providing vis
 
 <br>
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ## 💬 Medical Recommendation Engine
 
@@ -884,7 +886,7 @@ The **Recommendation Engine** generates personalized medical advice based on the
 
 <br>
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ## 🤖 AI Chatbot
 
@@ -943,3 +945,4 @@ The **AI Chatbot** provides an interactive interface for patients to ask questio
            • Conduct detailed tests
            • Adhere to prescribed medications"
 ```
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
