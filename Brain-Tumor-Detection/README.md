@@ -668,3 +668,278 @@ The user can download a **bilingual PDF report** containing:
                                  │   User   │
                                  │ (Report) │
                                  └──────────┘
+```
+# 🤖 AI Components
+
+The system is powered by **three core AI modules** that work together to provide comprehensive brain tumor diagnosis and patient support. Each component is designed for a specific task, and together they form a complete diagnostic pipeline.
+
+<br>
+
+---
+
+## 🔬 Classification
+
+The **Classification Module** is the primary diagnostic engine of the system. It analyzes MRI images and determines whether a tumor is present, and if so, which type.
+
+<br>
+
+<table>
+<tr>
+<td width="40%" valign="top">
+
+### 📌 Overview
+
+- **Task:** Multi-class tumor classification
+- **Input:** MRI image (224×224×3)
+- **Output:** Tumor type + Confidence score
+- **Classes:** 4 (Glioma, Meningioma, Pituitary, No Tumor)
+- **Architecture:** Custom CNN from scratch
+- **Parameters:** ~13M
+
+</td>
+<td width="60%" valign="top">
+
+### 🏗️ Architecture
+
+- **4 Convolutional Blocks**
+  - Conv2D (32 → 64 → 128 → 128 filters)
+  - MaxPooling2D after each block
+- **Fully Connected Layers**
+  - Flatten
+  - Dense (512 units, ReLU)
+  - Dropout (rate 0.5)
+  - Output Dense (4 units, Softmax)
+
+### 🎯 Training
+
+- **Optimizer:** Adam (lr=0.001)
+- **Loss:** Categorical Crossentropy
+- **Batch Size:** 32
+- **Epochs:** 20
+- **Callbacks:** ModelCheckpoint + EarlyStopping
+
+</td>
+</tr>
+</table>
+
+<br>
+
+### 📊 Performance
+
+| Metric | Value |
+|--------|-------|
+| **Accuracy** | **98.47%** |
+| Precision (Macro Avg) | 98.25% |
+| Recall (Macro Avg) | 98.75% |
+| F1-Score (Macro Avg) | 98.50% |
+| **No Tumor Recall** | **100%** ⭐ |
+
+<br>
+
+---
+
+## 🎯 Segmentation
+
+The **Segmentation Module** precisely delineates tumor boundaries, providing visual localization of the affected region for surgical planning and treatment monitoring.
+
+<br>
+
+<table>
+<tr>
+<td width="40%" valign="top">
+
+### 📌 Overview
+
+- **Task:** Binary tumor segmentation
+- **Input:** MRI image (128×128×3)
+- **Output:** Binary mask (128×128×1)
+- **Architecture:** LSMAtt-Net
+- **Parameters:** **1.39M** (5.5 MB)
+- **Framework:** TensorFlow / Keras
+
+</td>
+<td width="60%" valign="top">
+
+### 🏗️ LSMAtt-Net Architecture
+
+**Two key components:**
+
+1. **LSDC** — Lightweight Shared Dilation Conv
+   - Dilated convolutions with shared weights
+   - Multi-scale feature extraction
+   - **51.6% parameter reduction**
+
+2. **LMA** — Lightweight Multi-Attention
+   - Channel Attention (which features matter)
+   - Spatial Attention (where to focus)
+   - Effectively suppresses background noise
+
+</td>
+</tr>
+</table>
+
+<br>
+
+### 📊 Performance
+
+| Metric | Value |
+|--------|-------|
+| **Detection Rate** | **100%** ⭐ |
+| Average IoU | 51.07% |
+| **Best IoU** | **92.40%** ⭐ |
+| Images with IoU > 0 | 85/100 (85%) |
+| Validation Accuracy | 99.37% |
+
+<br>
+
+### 🏆 Comparison with State-of-the-Art
+
+| Model | Parameters | Avg IoU | Best IoU |
+|-------|:----------:|:-------:|:--------:|
+| U-Net (Standard) | 31.0M | 9.14% | 37.00% |
+| Attention U-Net | 3.0M | 10.00% | 50.40% |
+| **LSMAtt-Net (Ours)** | **1.39M** | **51.07%** | **92.40%** |
+
+<br>
+
+---
+
+## 💬 Medical Recommendation Engine
+
+The **Recommendation Engine** generates personalized medical advice based on the tumor type and calculated risk level, helping patients understand their diagnosis and next steps.
+
+<br>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 📌 Overview
+
+- **Task:** Medical recommendation generation
+- **Input:** Tumor type + Size (optional)
+- **Output:** Personalized recommendations
+- **Method:** Rule-based engine
+- **Language:** Bilingual (Arabic + English)
+- **Integration:** Saved to chat history
+
+</td>
+<td width="50%" valign="top">
+
+### 🎯 Risk Calculation
+
+**Base Risk:**
+- Glioma: 3
+- Meningioma: 2
+- Pituitary: 2
+
+**Size Multiplier:**
+- Small: 1
+- Medium: 2
+- Large: 3
+
+**Result:**
+- ≥ 6 → **High**
+- ≥ 4 → **Medium**
+- else → **Low**
+
+</td>
+</tr>
+</table>
+
+<br>
+
+### 📋 Recommendations by Tumor Type
+
+<table>
+<tr>
+<th width="15%">Type</th>
+<th width="28%">🟢 Low Risk</th>
+<th width="28%">🟡 Medium Risk</th>
+<th width="29%">🔴 High Risk</th>
+</tr>
+<tr>
+<td><b>Glioma</b></td>
+<td>Regular follow-up, MRI every 6 months</td>
+<td>Visit neurologist, detailed tests, medications</td>
+<td>Immediate hospital evaluation, neurosurgeon, chemotherapy</td>
+</tr>
+<tr>
+<td><b>Meningioma</b></td>
+<td>Annual check-ups, healthy lifestyle</td>
+<td>Neurologist consultation, regular MRI</td>
+<td>Neurosurgeon evaluation, discuss surgical removal</td>
+</tr>
+<tr>
+<td><b>Pituitary</b></td>
+<td>Endocrinologist follow-up, hormone check</td>
+<td>Hormone-regulating medication, monitor vision</td>
+<td>Urgent neurosurgical consultation</td>
+</tr>
+<tr>
+<td><b>No Tumor</b></td>
+<td colspan="3" align="center">Healthy lifestyle, annual routine check-ups, regular exercise</td>
+</tr>
+</table>
+
+<br>
+
+---
+
+## 🤖 AI Chatbot
+
+The **AI Chatbot** provides an interactive interface for patients to ask questions about their diagnosis, treatment options, and lifestyle recommendations.
+
+<br>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 📌 Overview
+
+- **Task:** Interactive patient consultation
+- **Input:** Natural language text
+- **Output:** Medical information + Recommendations
+- **Method:** Intent classification + Rule-based responses
+- **Session:** Persistent chat history
+- **Auth:** JWT-protected
+
+</td>
+<td width="50%" valign="top">
+
+### 🔄 Conversation Flow
+
+**Two-step interaction:**
+
+1. **User sends tumor type**
+   → Bot asks for tumor size
+
+2. **User sends tumor size**
+   → Bot provides recommendations
+
+**Fallback:**
+- Unrecognized intent → Ask to rephrase
+- No matching response → Default message
+
+</td>
+</tr>
+</table>
+
+<br>
+
+### 💡 Example Interaction
+
+```text
+👤 User:  "glioma"
+
+🤖 Bot:   "Glioma detected. What is the tumor size? 
+          (small / medium / large)"
+
+👤 User:  "medium"
+
+🤖 Bot:   "Based on Glioma (Medium):
+           • Visit a neurologist soon
+           • Conduct detailed tests
+           • Adhere to prescribed medications"
+```
